@@ -133,8 +133,8 @@
 			},
 			getColor1(event) {
 				const canvas = this.$refs.canvas1;
-				const x = event.offsetX;
-				const y = event.offsetY;
+				const x = parseInt((event.offsetX/canvas.clientWidth)*canvas.width);
+				const y = parseInt((event.offsetY/canvas.clientHeight)*canvas.height);
 				const index = (y * canvas.width + x) * 4;
 				this.rgb1 = []
 				this.rgb1[0] = this.imageData1.data[index];
@@ -145,8 +145,8 @@
 			},
 			getColor2(event) {
 				const canvas = this.$refs.canvas2;
-				const x = event.offsetX;
-				const y = event.offsetY;
+				const x = parseInt((event.offsetX/canvas.clientWidth)*canvas.width);
+				const y = parseInt((event.offsetY/canvas.clientHeight)*canvas.height);
 				const index = (y * canvas.width + x) * 4;
 				this.rgb2 = []
 				this.rgb2[0] = this.imageData2.data[index];
