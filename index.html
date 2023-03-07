@@ -16,40 +16,38 @@
 		<v-app>
 		  <v-main style="background-color:#f5f5f5">
 			<v-container>
+				<div height="100vh"  class="scrollable-card">
+					<v-row>
+						<v-col>
+							<v-card class="text-center pa-2">
+								<input type="file" @change="handleFileUpload1" />
+								<v-sheet width="100%" class="my-2">
+									<canvas ref="canvas1" style="width:100%;" @click="getColor1($event)"></canvas>
+								</v-sheet>
+								<v-img />
+								<v-card-text>
+									Selected color: <v-chip small v-if="selectedColor1" :style="{ backgroundColor: selectedColor1 }" class="white--text">{{ selectedColor1 }}</v-chip>
+								</v-card-text>
+							</v-card>
+						</v-col>
+						<v-col>
+							<v-card class="text-center pa-2">
+								<input type="file" @change="handleFileUpload2" />
+								<v-sheet width="100%" class="my-2">
+									<canvas ref="canvas2" style="width:100%;" @click="getColor2($event)"></canvas>
+								</v-sheet>
+								<v-img />
+								<v-card-text>
+									Selected color: <v-chip small v-if="selectedColor2" :style="{ backgroundColor: selectedColor2 }" class="white--text">{{ selectedColor2 }}</v-chip>
+								</v-card-text>
+							</v-card>
+						</v-col>
+					</v-row>
+				</div>
 
-				<v-row>
-					<v-col>
-						<v-card flat color="#ddd">
-							<div class="text-center py-5"　style="font-size: 24px;">類似度：{{similarity}}</div>
-						</v-card>
-					</v-col>
-				</v-row>
-				<v-row>
-					<v-col>
-						<v-card class="text-center pa-2">
-							<input type="file" @change="handleFileUpload1" />
-							<v-sheet width="100%" class="my-2">
-								<canvas ref="canvas1" style="width:100%;" @click="getColor1($event)"></canvas>
-							</v-sheet>
-							<v-img />
-							<v-card-text>
-								Selected color: <v-chip small v-if="selectedColor1" :style="{ backgroundColor: selectedColor1 }" class="white--text">{{ selectedColor1 }}</v-chip>
-							</v-card-text>
-						</v-card>
-					</v-col>
-					<v-col>
-						<v-card class="text-center pa-2">
-							<input type="file" @change="handleFileUpload2" />
-							<v-sheet width="100%" class="my-2">
-								<canvas ref="canvas2" style="width:100%;" @click="getColor2($event)"></canvas>
-							</v-sheet>
-							<v-img />
-							<v-card-text>
-								Selected color: <v-chip small v-if="selectedColor2" :style="{ backgroundColor: selectedColor2 }" class="white--text">{{ selectedColor2 }}</v-chip>
-							</v-card-text>
-						</v-card>
-					</v-col>
-				</v-row>
+				<v-card class="fixed-card" style="background-color: transparent;" flat tile>
+					<div class="text-center py-5 transparent-card"　style="font-size: 24px;">類似度：{{similarity}}</div>
+				</v-card>
 			</v-container>
 		  </v-main>
 		</v-app>
@@ -68,7 +66,7 @@
             imageData2: null,
             selectedColor1: null,
             selectedColor2: null,
-			rgb1:[0,0,0],
+			rgb1:[255,85,119],
 			rgb2:[0,0,0]
           };
         },
@@ -94,6 +92,7 @@
 				ctx.drawImage(image, 0, 0);
 				this.imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			};
+			this.selectedColor1 = `rgb(${this.rgb1[0]}, ${this.rgb1[1]}, ${this.rgb1[2]})`;
 		},
 
 		methods: {
@@ -158,5 +157,22 @@
         },
       });
     </script>
+	<style>
+		.scrollable-card {
+		  max-height: calc(100vh - 64px);
+		  overflow-y: auto;
+		}
+		.fixed-card {
+		  position: fixed;
+		  bottom: 0;
+		  left: 0;
+		  right: 0;
+		}
+		.transparent-card {
+			background-color: rgba(0, 0, 0, 0.7);
+			box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+			color: #fff;
+		}
+		</style>
   </body>
 </html>
