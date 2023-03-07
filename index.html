@@ -86,6 +86,16 @@
 			}
 		},
 		mounted () {
+			const image = new Image();
+			image.src = "main_color.png";
+			image.onload = () => {
+				const canvas = this.$refs.canvas1;
+				const ctx = canvas.getContext('2d');
+				canvas.width = image.width;
+				canvas.height = image.height;
+				ctx.drawImage(image, 0, 0);
+				this.imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			};
 		},
 
 		methods: {
