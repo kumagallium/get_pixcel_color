@@ -66,6 +66,7 @@
             imageData2: null,
             selectedColor1: null,
             selectedColor2: null,
+			color_imgs:["color1.png","color2.png"],
 			rgb1:[255,85,119],
 			rgb2:[0,0,0]
           };
@@ -83,7 +84,7 @@
 		},
 		mounted () {
 			const image = new Image();
-			image.src = "https://kumagallium.github.io/get_pixcel_color/main_color.png";
+			image.src = "https://kumagallium.github.io/get_pixcel_color/"+this.color_imgs[0];
 			image.onload = () => {
 				const canvas = this.$refs.canvas1;
 				const ctx = canvas.getContext('2d');
