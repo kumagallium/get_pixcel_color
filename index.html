@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Image Color Extractor</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
@@ -20,9 +20,21 @@
 					<v-row>
 						<v-col>
 							<v-card class="text-center pa-2">
-								<input type="file" @change="handleFileUpload1" />
+								<v-row justify="center">
+									<v-spacer></v-spacer>
+									<v-col>
+										<v-radio-group v-model="selectedOption" @change="onOptionChanged" class="ma-0" row hide-details>
+											<v-radio label="color1" value="0"></v-radio>
+											<v-radio label="color2" value="1"></v-radio>
+											<v-radio label="other" value="2"></v-radio>
+										</v-radio-group>
+									</v-col>
+									<v-spacer></v-spacer>
+								</v-row>
+
+								<input type="file" v-if="selectedOption==2"  @change="handleFileUpload1" />
 								<v-sheet width="100%" class="my-2">
-									<canvas ref="canvas1" style="width:100%;" @click="getColor1($event)"></canvas>
+									<canvas ref="canvas1" style="width:90%;" @click="getColor1($event)"></canvas>
 								</v-sheet>
 								<v-img />
 								<v-card-text>
@@ -34,7 +46,7 @@
 							<v-card class="text-center pa-2">
 								<input type="file" @change="handleFileUpload2" />
 								<v-sheet width="100%" class="my-2">
-									<canvas ref="canvas2" style="width:100%;" @click="getColor2($event)"></canvas>
+									<canvas ref="canvas2" style="width:90%;" @click="getColor2($event)"></canvas>
 								</v-sheet>
 								<v-img />
 								<v-card-text>
@@ -52,7 +64,7 @@
 		  </v-main>
 		</v-app>
 	  </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -67,6 +79,7 @@
             selectedColor1: null,
             selectedColor2: null,
 			color_imgs:["color1.png","color2.png"],
+			selectedOption: "0",
 			rgb1:[255,85,119],
 			rgb2:[0,0,0]
           };
@@ -92,11 +105,36 @@
 				canvas.height = image.height;
 				ctx.drawImage(image, 0, 0);
 				this.imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				
 			};
 			this.selectedColor1 = `rgb(${this.rgb1[0]}, ${this.rgb1[1]}, ${this.rgb1[2]})`;
 		},
 
 		methods: {
+			onOptionChanged() {
+				if(this.selectedOption != 2){
+					const image = new Image();
+					image.src = "https://kumagallium.github.io/get_pixcel_color/"+this.color_imgs[parseInt(this.selectedOption)];
+					image.onload = () => {
+						const canvas = this.$refs.canvas1;
+						const ctx = canvas.getContext('2d');
+						canvas.width = image.width;
+						canvas.height = image.height;
+						ctx.drawImage(image, 0, 0);
+						this.imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+						const x = 10;
+						const y = 10;
+						const index = (y * canvas.width + x) * 4;
+						this.rgb1 = []
+						this.rgb1[0] = this.imageData1.data[index];
+						this.rgb1[1] = this.imageData1.data[index + 1];
+						this.rgb1[2] = this.imageData1.data[index + 2];
+						console.log(`R: ${this.rgb1[0]}, G: ${this.rgb1[2]}, B: ${this.rgb1[2]}`);
+						this.selectedColor1 = `rgb(${this.rgb1[0]}, ${this.rgb1[1]}, ${this.rgb1[2]})`;
+					};
+				}
+			},
 			handleFileUpload1(event) {
 				this.file = event.target.files[0];
 				this.url = URL.createObjectURL(this.file);
@@ -174,6 +212,6 @@
 			box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 			color: #fff;
 		}
-		</style>
+	</style>
   </body>
 </html>
